@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      # 从 tag 解析版本号和 PHP 版本
+      # 示例: v1.1.1-php8.5 => VERSION=1.1.1, PHP_VERSION=8.5
+      - name: Parse tag
+        id: tag
+        run: |
+          TAG=${GITHUB_REF_NAME#v}
+          VERSION=${TAG%%-*}
+          PHP_VERSION=${TAG#*-php}
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "PHP_VERSION=$PHP_VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Package Windows DLL
+        run: |
+          mkdir -p dist
+          zip -j dist/php_xqkeji-${{ steps.tag.outputs.VERSION }}_php${{ steps.tag.outputs.PHP_VERSION }}-x86_64-windows-nts.zip php_xqkeji.dll
+      
+      - name: Package Linux SO
+        run: |
+          mkdir -p dist
+          zip -j dist/php_xqkeji-${{ steps.tag.outputs.VERSION }}_php${{ steps.tag.outputs.PHP_VERSION }}-x86_64-linux-glibc-nts.zip xqkeji.so
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+          generate_release_notes: true

@@ -1,0 +1,16 @@
+{
+    "name": "xqkeji/xqkeji",
+    "type": "php-ext",
+    "description": "xqkeji low-code development framework PHP extension",
+    "license": "SSPL-1.0",
+    "require": {
+        "php": ">=8.1"
+    },
+    "php-ext": {
+        "extension-name": "xqkeji",
+        "support-zts": false,
+        "support-nts": true,
+        "os-families": ["windows", "linux"],
+        "download-url-method": ["pre-packaged-binary"]
+    }
+}

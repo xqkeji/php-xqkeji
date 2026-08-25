@@ -7,8 +7,10 @@ modules/
 *.lo
 *.o
 *.dep
-*.so
-*.dll
+
+# 允许 xqkeji 扩展二进制文件
+!php_xqkeji.dll
+!xqkeji.so
 
 Makefile
 Makefile.fragments
