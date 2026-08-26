@@ -33,7 +33,7 @@ jobs:
       - name: Package Linux SO
         run: |
           mkdir -p dist
-          zip -j dist/php_xqkeji-${{ steps.tag.outputs.VERSION }}_php${{ steps.tag.outputs.PHP_VERSION }}-x86_64-linux-musl-nts.zip xqkeji.so
+          zip -j dist/php_xqkeji-${{ steps.tag.outputs.VERSION }}_php${{ steps.tag.outputs.PHP_VERSION }}-x86_64-linux-glibc-nts.zip xqkeji.so
       
       - name: Create Release
         uses: softprops/action-gh-release@v2
