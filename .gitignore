@@ -24,3 +24,4 @@ config.status
 configure
 libtool
 run-tests.php
+/.workbuddy/memory

@@ -1,0 +1,95 @@
+# NOTICES / 第三方开源许可声明
+
+本文件随 php-xqkeji（xqkeji 低代码开发框架的 PHP C 扩展）二进制包一同分发。
+框架在开发与编译过程中集成了以下第三方开源组件，其知识产权归各自原权利人所有，
+并受对应开源许可证约束。分发本框架（包括但不限于 .dll / .so 二进制）时，
+必须保留本文件及其中全部声明。
+
+This file is distributed with the binary package of php-xqkeji
+(the PHP C extension of the xqkeji low-code development framework).
+The Framework integrates the following third-party open source components during
+development and compilation. Their intellectual property rights belong to their
+respective original right holders and are subject to the corresponding open source
+licenses. When distributing the Framework (including but not limited to the .dll / .so
+binaries), this file and all notices herein must be retained.
+
+================================================================================
+1. Phalcon — BSD 3-Clause "New" or "Revised" License
+   框架部分 Zephir 源代码参考并改编自 Phalcon 项目（官方协议：BSD 3-Clause "New"/"Revised"）。
+   Part of the Framework's Zephir source code references and adapts code from
+   the Phalcon project (official license: BSD 3-Clause "New"/"Revised").
+   官方仓库 / Official repository: https://github.com/phalcon/cphalcon
+--------------------------------------------------------------------------------
+Copyright (c) 2011-present, Phalcon Team
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+* Redistributions of source code must retain the above copyright
+  notice, this list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright
+  notice, this list of conditions and the following disclaimer in the
+  documentation and/or other materials provided with the distribution.
+
+* Neither the name of the Phalcon Team nor the names of its
+  contributors may be used to endorse or promote products derived
+  from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+================================================================================
+2. Zephir — MIT License
+   框架以 Zephir 语言开发并编译，编译产物（.so / .dll）中嵌入了
+   Zephir 运行时的核心 C 代码。
+   The Framework is developed and compiled in the Zephir language, and the
+   compiled binary (.so / .dll) embeds Zephir's core runtime C code.
+   官方仓库 / Official repository: https://github.com/zephir-lang/zephir
+--------------------------------------------------------------------------------
+Copyright (c) 2013-present Phalcon Team
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+================================================================================
+备注 / Notes
+- 上述第三方许可文本以各自项目官方发布版本为准；如您引用的具体提交/版本与
+  此处不一致，请以您实际参考的源文件中的 LICENSE 为准，并确保随包附带一致文本。
+- 本框架自身的双重授权条款见仓库根目录 LICENSE.md，第三方组件的许可独立于
+  该协议共存，不影响授权方自有部分的授权约定。
+- The above third-party license texts are subject to the official releases of
+  their respective projects. If the specific commit/version you referenced
+  differs, use the LICENSE in the actual source file you referenced and ensure
+  the distributed text is consistent.
+- The Framework's own dual-license terms are set out in LICENSE.md at the
+  repository root; the third-party licenses coexist independently of that
+  Agreement and do not affect the licensing of the Licensor's own portions.
+================================================================================

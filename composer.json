@@ -2,7 +2,7 @@
     "name": "xqkeji/xqkeji",
     "type": "php-ext",
     "description": "xqkeji low-code development framework PHP extension",
-    "license": "SSPL-1.0",
+    "license": "proprietary",
     "require": {
         "php": ">=8.1"
     },
