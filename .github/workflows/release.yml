@@ -14,23 +14,49 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      # 从 tag 解析版本号和 PHP 版本
-      # 示例: v1.1.1-php8.5 => VERSION=1.1.1, PHP_VERSION=8.5
+      # 版本号取自 tag（形如 v1.2.2），PHP 小版本取自 Dockerfile 的 ARG PHP_BRANCH，
+      # 与镜像构建用同一个来源。
+      # tag 名里不要再带 -phpX.Y 后缀：Composer/Packagist 认它为 Invalid version string，
+      # 带后缀的 18 个 tag 会被全部 skip，packagist 上一个版本都发不出去。
       - name: Parse tag
         id: tag
         run: |
-          TAG=${GITHUB_REF_NAME#v}
-          VERSION=${TAG%%-*}
-          PHP_VERSION=${TAG#*-php}
+          case $GITHUB_REF_NAME in
+            *-*)
+              echo "::error::tag 名要形如 v1.2.2，不要再带 -phpX.Y 后缀：$GITHUB_REF_NAME"
+              exit 1
+              ;;
+          esac
+          VERSION=${GITHUB_REF_NAME#v}
+          PHP_VERSION=$(sed -n 's/^ARG PHP_BRANCH=\(.*\)$/\1/p' Dockerfile)
+          if [ -z "$PHP_VERSION" ]; then
+            echo '::error::取不到 PHP 小版本，Dockerfile 里要有 ARG PHP_BRANCH=x.y 这一行'
+            exit 1
+          fi
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
           echo "PHP_VERSION=$PHP_VERSION" >> $GITHUB_OUTPUT
+          echo "打包 $VERSION 的 php$PHP_VERSION 二进制"
       
       - name: Package Windows DLL
+        # PIE 在 Windows 上只走 windows-binary 这一种下载方式（DownloadUrlMethod.php 里
+        # 遇到 Windows 直接 return，composer.json 的 download-url-method 在 Windows 不参与），
+        # 而它的资产名与包内 DLL 名都由 src/Platform/WindowsExtensionAssetName.php 定死：
+        #   php_{扩展名}-{版本}-{PHP小节}-{nts|ts}-{编译器}-{架构}.(zip|dll)
+        # 三个字段实测自本机 PHP 8.5.12：php -i 的 "PHP Extension Build => API20250925,NTS,VS17"
+        # 给出 nts 与 vs17，php_uname('m') 的 AMD64 归一成 x86_64。
+        # 这个 .dll 只编了 NTS（composer.json 里 support-zts: false），所以只发 nts 一份。
+        # 换 PHP 大版本时编译器也可能换（VS17 -> VS18），届时要按 php -i 那行同步改这里。
         run: |
           mkdir -p dist
-          zip -j dist/php_xqkeji-${{ steps.tag.outputs.VERSION }}_php${{ steps.tag.outputs.PHP_VERSION }}-x86_64-windows-nts.zip php_xqkeji.dll
+          base="php_xqkeji-${{ steps.tag.outputs.VERSION }}-${{ steps.tag.outputs.PHP_VERSION }}-nts-vs17-x86_64"
+          cp php_xqkeji.dll "${base}.dll"
+          zip -j "dist/${base}.zip" "${base}.dll"
+          rm -f "${base}.dll"
       
       - name: Package Linux SO
+        # 这个名字是 PIE 的 pre-packaged-binary 模板（src/Platform/PrePackagedBinaryAssetName.php
+        # 的 'php_%s-%s_php%s-%s-%s-%s%s%s.zip'）代入 x86_64/linux/glibc/nts 的结果，
+        # 包内必须是根目录下的 xqkeji.so（zip -j 保证），别按 Windows 那套改名。
         run: |
           mkdir -p dist
           zip -j dist/php_xqkeji-${{ steps.tag.outputs.VERSION }}_php${{ steps.tag.outputs.PHP_VERSION }}-x86_64-linux-glibc-nts.zip xqkeji.so

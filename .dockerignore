@@ -1,0 +1,11 @@
+# 构建上下文只要 Dockerfile 里 COPY 的三个文件，其余全部排除。
+# .git 有 100 多 MB（每个版本一份 .so/.dll），不排除会把整个历史上传进构建器。
+.git
+.gitignore
+.gitattributes
+.github
+Dockerfile
+README.md
+composer.json
+php_xqkeji.dll
+.workbuddy
