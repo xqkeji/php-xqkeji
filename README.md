@@ -43,8 +43,9 @@ xqkeji 低代码开发框架的 PHP C 扩展（二进制分发），包含 Windo
 
 ## 用 PIE 安装
 
-- Linux：`pie install xqkeji/xqkeji`，命中本仓库 Release 的 `php_xqkeji-<版本>_php<8.5>-x86_64-linux-glibc-nts.zip`，包内根目录是 `xqkeji.so`。
-- Windows：同样支持，但 PIE 在 Windows 只走预编译二进制，资产名写死为 `php_xqkeji-<版本>-<PHP小节>-nts-vs17-x86_64.zip`；当前 .dll 只有 NTS + VS17 + x64 一种构建（`support-zts: false`），ZTS 或其他编译器装不上。安装后 PIE 会落盘成 `ext/php_xqkeji.dll`，php.ini 里写 `extension=php_xqkeji.dll`。
+- Linux：`pie install xqkeji/xqkeji`，命中本仓库 Release 的 `php_xqkeji-v1.2.1_php8.5-x86_64-linux-glibc-nts.zip`，包内根目录是 `xqkeji.so`。
+- Windows：同样支持，但 PIE 在 Windows 只走预编译二进制，资产名写死为 `php_xqkeji-v1.2.1-8.5-nts-vs17-x86_64.zip`（包内 DLL 与 zip 同名）；当前 .dll 只有 NTS + VS17 + x64 一种构建（`support-zts: false`），ZTS 或其他编译器装不上。安装后 PIE 会落盘成 `ext/php_xqkeji.dll`，php.ini 里写 `extension=php_xqkeji.dll`。
+- 两个名字里的版本都带标签的 `v`：PIE 用的是 Composer 报告的版本串，标签写 `v1.2.1` 时它不会帮你剥掉。`release.yml` 按这个规则打包，改名会让 `pie install` 找不到资产。
 
 ## Docker 镜像
 

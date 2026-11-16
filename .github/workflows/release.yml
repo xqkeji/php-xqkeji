@@ -27,28 +27,31 @@ jobs:
               exit 1
               ;;
           esac
-          VERSION=${GITHUB_REF_NAME#v}
           PHP_VERSION=$(sed -n 's/^ARG PHP_BRANCH=\(.*\)$/\1/p' Dockerfile)
           if [ -z "$PHP_VERSION" ]; then
             echo '::error::取不到 PHP 小版本，Dockerfile 里要有 ARG PHP_BRANCH=x.y 这一行'
             exit 1
           fi
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          # 资产名里的版本用标签原样（含 v），不要剥掉 v：PIE 取的是 Composer 报告的版本串，
+          # 标签带 v 时 Packagist 保留 v，于是它找的是 php_xqkeji-v1.2.1_php8.5-...；
+          # 剥掉 v 发布的资产 PIE 一个都找不到（实测报错见下两个 step 的注释）。
+          echo "TAG_REF=$GITHUB_REF_NAME" >> $GITHUB_OUTPUT
           echo "PHP_VERSION=$PHP_VERSION" >> $GITHUB_OUTPUT
-          echo "打包 $VERSION 的 php$PHP_VERSION 二进制"
+          echo "打包 $GITHUB_REF_NAME 的 php$PHP_VERSION 二进制"
       
       - name: Package Windows DLL
         # PIE 在 Windows 上只走 windows-binary 这一种下载方式（DownloadUrlMethod.php 里
         # 遇到 Windows 直接 return，composer.json 的 download-url-method 在 Windows 不参与），
         # 而它的资产名与包内 DLL 名都由 src/Platform/WindowsExtensionAssetName.php 定死：
         #   php_{扩展名}-{版本}-{PHP小节}-{nts|ts}-{编译器}-{架构}.(zip|dll)
-        # 三个字段实测自本机 PHP 8.5.12：php -i 的 "PHP Extension Build => API20250925,NTS,VS17"
+        # 其中 {版本} 是 Composer 报告的版本串，标签带 v 时就是 v1.2.1（PIE 不剥 v）。
+        # 另两个字段实测自本机 PHP 8.5.12：php -i 的 "PHP Extension Build => API20250925,NTS,VS17"
         # 给出 nts 与 vs17，php_uname('m') 的 AMD64 归一成 x86_64。
         # 这个 .dll 只编了 NTS（composer.json 里 support-zts: false），所以只发 nts 一份。
         # 换 PHP 大版本时编译器也可能换（VS17 -> VS18），届时要按 php -i 那行同步改这里。
         run: |
           mkdir -p dist
-          base="php_xqkeji-${{ steps.tag.outputs.VERSION }}-${{ steps.tag.outputs.PHP_VERSION }}-nts-vs17-x86_64"
+          base="php_xqkeji-${{ steps.tag.outputs.TAG_REF }}-${{ steps.tag.outputs.PHP_VERSION }}-nts-vs17-x86_64"
           cp php_xqkeji.dll "${base}.dll"
           zip -j "dist/${base}.zip" "${base}.dll"
           rm -f "${base}.dll"
@@ -57,9 +60,11 @@ jobs:
         # 这个名字是 PIE 的 pre-packaged-binary 模板（src/Platform/PrePackagedBinaryAssetName.php
         # 的 'php_%s-%s_php%s-%s-%s-%s%s%s.zip'）代入 x86_64/linux/glibc/nts 的结果，
         # 包内必须是根目录下的 xqkeji.so（zip -j 保证），别按 Windows 那套改名。
+        # PIE 1.5.5 在容器里实测报出的候选清单（任一命中即可）：
+        #   php_xqkeji-v1.2.1_php8.5-x86_64-linux-glibc{,-nts}.{zip,tgz} 以及 anylibc 的同名 4 个
         run: |
           mkdir -p dist
-          zip -j dist/php_xqkeji-${{ steps.tag.outputs.VERSION }}_php${{ steps.tag.outputs.PHP_VERSION }}-x86_64-linux-glibc-nts.zip xqkeji.so
+          zip -j dist/php_xqkeji-${{ steps.tag.outputs.TAG_REF }}_php${{ steps.tag.outputs.PHP_VERSION }}-x86_64-linux-glibc-nts.zip xqkeji.so
       
       - name: Create Release
         uses: softprops/action-gh-release@v2
