@@ -4,7 +4,7 @@
     "description": "xqkeji low-code development framework PHP extension",
     "license": "proprietary",
     "require": {
-        "php": ">=8.1"
+        "php": ">=8.5"
     },
     "php-ext": {
         "extension-name": "xqkeji",
